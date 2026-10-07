@@ -50,17 +50,17 @@
     Пользователь
      │
      ▼
-Консольный интерфейс
-(main.py, menu.py, auth.py)
+    Консольный интерфейс
+    (main.py, menu.py, auth.py)
      │
      ▼
-Сервисный слой
-(services)
+    Сервисный слой
+    (services)
      │
      ▼
-Слой доступа к данным
-(repositories)
+    Слой доступа к данным
+    (repositories)
      │
      ▼
-База данных
-(database)
+    База данных
+    (database)
