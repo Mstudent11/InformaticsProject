@@ -1,0 +1,46 @@
+@startuml MedDocDent Use Case
+left to right direction
+
+actor "Администратор" as Admin
+actor "Пациент" as Pacient
+actor "Доктор" as Doctor
+
+rectangle "MedDocDent" {
+
+    usecase "Вход в систему" as UC_LoginAdmin
+    usecase "Вход в систему" as UC_LoginPacient
+    usecase "Вход в систему" as UC_LoginDoctor
+
+    usecase "Список докторов" as UC_Doctors
+    usecase "Расписание" as UC_ViewRasp
+    usecase "Меню бронирований" as UC_Reservations
+    
+    usecase "Добавление доктора" as UC_CreateDoctor
+    usecase "Добавление пациента" as UC_CreatePacient
+    usecase "Добавление свободного времени" as UC_AddTime
+    usecase "Удаление свободного времени" as UC_DeleteTime
+
+    usecase "Просмотр своих бронирований" as UC_MyReservations
+    usecase "Бронирование записи" as UC_CreateReservation
+}
+
+Admin -- UC_LoginAdmin
+Doctor -- UC_LoginDoctor
+Pacient -- UC_LoginPacient
+
+UC_LoginAdmin -- UC_ViewRasp
+UC_LoginAdmin -- UC_CreateDoctor
+UC_LoginAdmin -- UC_CreatePacient
+UC_LoginAdmin -- UC_DeleteTime
+UC_LoginAdmin -- UC_AddTime
+UC_LoginAdmin -- UC_Doctors
+
+UC_LoginPacient -- UC_Reservations
+UC_Reservations -- UC_MyReservations
+UC_Reservations -- UC_CreateReservation
+UC_LoginPacient -- UC_ViewRasp
+UC_LoginPacient -- UC_Doctors
+
+UC_LoginDoctor -- UC_ViewRasp
+
+@enduml
