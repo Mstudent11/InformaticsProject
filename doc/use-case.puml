@@ -1,31 +1,46 @@
-@startuml
+@startuml MedDocDent Use Case
 left to right direction
-skinparam packageStyle rectangle
-actor &quot;Пациент&quot; as User
-package &quot;Система&quot; {
-usecase &quot;Вход в систему&quot; as UC_Login
-usecase &quot;Бронирование сеанса с врачом&quot; as UC_Bron'
-usecase &quot;Просмотр расписания&quot; as UC_Rasp
+
+actor "Администратор" as Admin
+actor "Пациент" as Pacient
+actor "Доктор" as Doctor
+
+rectangle "MedDocDent" {
+
+    usecase "Вход в систему" as UC_LoginAdmin
+    usecase "Вход в систему" as UC_LoginPacient
+    usecase "Вход в систему" as UC_LoginDoctor
+
+    usecase "Список докторов" as UC_Doctors
+    usecase "Расписание" as UC_ViewRasp
+    usecase "Меню бронирований" as UC_Reservations
+    
+    usecase "Добавление доктора" as UC_CreateDoctor
+    usecase "Добавление пациента" as UC_CreatePacient
+    usecase "Добавление свободного времени" as UC_AddTime
+    usecase "Удаление свободного времени" as UC_DeleteTime
+
+    usecase "Просмотр своих бронирований" as UC_MyReservations
+    usecase "Бронирование записи" as UC_CreateReservation
 }
-left to right direction
-skinparam packageStyle rectangle
-actor &quot;Администратор&quot; as User
-package &quot;Система&quot; {
-usecase &quot;Вход в систему&quot; as UC_Login
-usecase &quot;Создание профиля пациента / врача&quot; as UC_Create
-usecase &quot;Просмотр расписания&quot; as UC_Rasp
-usecase &quot;Редактирование расписания&quot; as UC_Redact
-}
-left to right direction
-skinparam packageStyle rectangle
-actor &quot;Врач&quot; as User
-package &quot;Система&quot; {
-usecase &quot;Вход в систему&quot; as UC_Login
-usecase &quot;Просмотр расписания&quot; as UC_Rasp
-}
-User --&gt; UC_Login
-User --&gt; UC_Rasp
-User --&gt; UC_Bron'
-User --&gt; UC_Redact
-User --&gt; UC_Create
+
+Admin -- UC_LoginAdmin
+Doctor -- UC_LoginDoctor
+Pacient -- UC_LoginPacient
+
+UC_LoginAdmin -- UC_ViewRasp
+UC_LoginAdmin -- UC_CreateDoctor
+UC_LoginAdmin -- UC_CreatePacient
+UC_LoginAdmin -- UC_DeleteTime
+UC_LoginAdmin -- UC_AddTime
+UC_LoginAdmin -- UC_Doctors
+
+UC_LoginPacient -- UC_Reservations
+UC_Reservations -- UC_MyReservations
+UC_Reservations -- UC_CreateReservation
+UC_LoginPacient -- UC_ViewRasp
+UC_LoginPacient -- UC_Doctors
+
+UC_LoginDoctor -- UC_ViewRasp
+
 @enduml
