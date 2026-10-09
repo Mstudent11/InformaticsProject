@@ -67,7 +67,7 @@
     (database)
 
 #### UseCase
-    ![UseCaseDiagr]()
+    ![UseCaseDiagr](https://github.com/Mstudent11/InformaticsProject/blob/main/UseCase.png?raw=true)
 
 #### Блок-схемы
     Действия администратора
@@ -78,3 +78,5 @@
 
     Действия пациента
     ![DeistviyaPacient](https://github.com/Mstudent11/InformaticsProject/blob/main/docs/DeistviyaPacienta.png?raw=true)
+
+
