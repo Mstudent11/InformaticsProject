@@ -67,7 +67,6 @@
     (database)
 
 #### UseCase
-    ![UseCaseDiagr](https://github.com/Mstudent11/InformaticsProject/blob/main/UseCase.png?raw=true)
 <img width="1195" height="720" alt="UseCase" src="https://github.com/user-attachments/assets/5ea4f107-03c6-4ebd-a74a-893b694b9ece" />
 
 #### Блок-схемы
