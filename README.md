@@ -72,13 +72,12 @@
 
 #### Блок-схемы
     Действия администратора
-    ![DeistviyaAdmin](https://github.com/Mstudent11/InformaticsProject/blob/main/docs/DeistviyaAdmin.png?raw=true)
 <img width="929" height="910" alt="DeistviyaAdmin" src="https://github.com/user-attachments/assets/2ee2c0ea-c6e1-4af5-b2b0-e4ef9237a96c" />
+
     Действия доктора
-    ![DeistviyaDoctor](https://github.com/Mstudent11/InformaticsProject/blob/main/docs/DeistviyaDoctor.png?raw=true)
 <img width="664" height="901" alt="DeistviyaDoctor" src="https://github.com/user-attachments/assets/16145483-2b06-49cb-95d6-be16bba834f9" />
+
     Действия пациента
-    ![DeistviyaPacient](https://github.com/Mstudent11/InformaticsProject/blob/main/docs/DeistviyaPacienta.png?raw=true)
 <img width="691" height="953" alt="DeistviyaPacienta" src="https://github.com/user-attachments/assets/3743faaf-b8a6-496a-8e3f-a17695b9d1cc" />
 
 
