@@ -66,7 +66,15 @@
     База данных
     (database)
 
+#### UseCase
+    ![UseCaseDiagr]()
+
+#### Блок-схемы
     Действия администратора
-    <img width="929" height="910" alt="DeistviyaAdmin" src="https://github.com/user-attachments/assets/7ff90ef7-55ad-4f91-8881-3897c60b17d4" />
+    ![DeistviyaAdmin](https://github.com/Mstudent11/InformaticsProject/blob/main/docs/DeistviyaAdmin.png?raw=true)
+
+    Действия доктора
+    ![DeistviyaDoctor](https://github.com/Mstudent11/InformaticsProject/blob/main/docs/DeistviyaDoctor.png?raw=true)
 
     Действия пациента
+    ![DeistviyaPacient](https://github.com/Mstudent11/InformaticsProject/blob/main/docs/DeistviyaPacienta.png?raw=true)
