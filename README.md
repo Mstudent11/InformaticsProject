@@ -65,3 +65,8 @@
      ▼
     База данных
     (database)
+
+    Действия администратора
+    <img width="929" height="910" alt="DeistviyaAdmin" src="https://github.com/user-attachments/assets/7ff90ef7-55ad-4f91-8881-3897c60b17d4" />
+
+    Действия пациента
