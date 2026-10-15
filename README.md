@@ -75,6 +75,9 @@
 
     Действия доктора
 <img width="664" height="901" alt="DeistviyaDoctor" src="https://github.com/user-attachments/assets/16145483-2b06-49cb-95d6-be16bba834f9" />
+#### ER-диаграмма
+<img width="1131" height="761" alt="2026-10-15_18-09-24" src="https://github.com/user-attachments/assets/df06a4c5-edf2-49a3-86d4-2b7e80b1fe7b" />
+
 
     Действия пациента
 <img width="691" height="953" alt="DeistviyaPacienta" src="https://github.com/user-attachments/assets/3743faaf-b8a6-496a-8e3f-a17695b9d1cc" />
