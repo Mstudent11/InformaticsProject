@@ -1,0 +1,67 @@
+@startuml
+title ER Diagram: MedDocDent
+left to right direction
+
+entity User {
+    *user_id : int
+    --
+    login : str
+    password_hash : str
+    role : enum
+    full_name : str
+    contact_phone : str
+}
+
+entity Doctor {
+    *doctor_id : int
+    --
+    specialty : str
+    shift_type : str
+}
+
+entity Patient {
+    *patient_id : int
+    --
+    birth_date : date
+    gender : str
+    policy_number : str
+    contact_phone : str
+}
+
+entity SchedulePeriod {
+    *period_id : int
+    --
+    doctor_id : int
+    start_date : date
+    end_date : date
+    type : enum
+}
+
+entity Shift {
+    *shift_id : int
+    --
+    doctor_id : int
+    day_date : date
+    start_time : time
+    end_time : time
+    status : enum
+}
+
+entity Appointment {
+    *appointment_id : int
+    --
+    patient_id : int
+    shift_id : int
+    created_at : datetime
+    updated_at : datetime
+    status : enum
+}
+
+User ||--{ Doctor 
+User ||--{ Patient 
+Doctor ||--{ SchedulePeriod 
+Doctor ||--{ Shift 
+Shift ||--{ Appointment 
+Patient ||--{ Appointment 
+
+@enduml
