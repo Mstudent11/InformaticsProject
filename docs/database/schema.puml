@@ -34,7 +34,7 @@ entity SchedulePeriod {
     doctor_id : int
     start_date : date
     end_date : date
-    type : enum
+    type : bool
 }
 
 entity Shift {
@@ -44,7 +44,7 @@ entity Shift {
     day_date : date
     start_time : time
     end_time : time
-    status : enum
+    status : bool
 }
 
 entity Appointment {
@@ -54,7 +54,7 @@ entity Appointment {
     shift_id : int
     created_at : datetime
     updated_at : datetime
-    status : enum
+    status : bool
 }
 
 User ||--{ Doctor 
