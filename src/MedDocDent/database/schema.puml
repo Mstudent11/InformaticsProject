@@ -7,14 +7,17 @@ entity User {
     --
     login : str
     password_hash : str
-    role : enum
-    full_name : str
+    role : bool
+    surname : str
+    name : str
+    patronym : str
     contact_phone : str
 }
 
 entity Doctor {
     *doctor_id : int
     --
+    user_id : int
     specialty : str
     shift_type : str
 }
@@ -22,6 +25,7 @@ entity Doctor {
 entity Patient {
     *patient_id : int
     --
+    user_id : int
     birth_date : date
     gender : str
     policy_number : str
@@ -57,6 +61,8 @@ entity Appointment {
     status : bool
 }
 
+User ||--|| Doctor
+User ||--|| Patient
 User ||--{ Doctor 
 User ||--{ Patient 
 Doctor ||--{ SchedulePeriod 

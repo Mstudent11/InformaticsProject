@@ -4,13 +4,16 @@ CREATE TABLE users (
     login VARCHAR(50) NOT NULL UNIQUE,   -- Логин для входа
     password_hash VARCHAR(255) NOT NULL, -- Хеш пароля 
     role VARCHAR(20) NOT NULL,           -- Роль: ADMIN, DOCTOR, PATIENT
-    full_name VARCHAR(100) NOT NULL,     -- Полное имя пользователя
+    name VARCHAR(100) NOT NULL,     -- Полное имя пользователя
+    surname VARCHAR(100) NOT NULL,
+    partronymic VARCHAR(100) NOT NULL,
     contact_phone VARCHAR(20)            -- Контактный телефон
 );
 
 -- Профиль пациента 
 CREATE TABLE patients (
     patient_id INTEGER PRIMARY KEY, -- Ссылка на user_id
+    user_id INTEGER NOT NULL UNIQUE, 
     birth_date DATE NOT NULL,   -- Дата рождения
     gender VARCHAR(10),         -- Пол
     policy_number VARCHAR(50),  -- Номер полиса
@@ -22,6 +25,7 @@ CREATE TABLE patients (
 -- Профиль врача 
 CREATE TABLE doctors (
     doctor_id INTEGER PRIMARY KEY,        -- Ссылка на user_id 
+    user_id INTEGER NOT NULL UNIQUE, 
     specialty VARCHAR(100) NOT NULL,  -- Специальность врача (например, «терапевт», «стоматолог»)
     shift_type VARCHAR(50),           -- Тип графика/смены врача
     CONSTRAINT fk_doctor_user FOREIGN KEY (doctor_id) REFERENCES users(user_id)
@@ -35,7 +39,8 @@ CREATE TABLE schedule_periods (
     end_date DATE NOT NULL,    -- Дата окончания периода
     type VARCHAR(20) NOT NULL, -- Тип периода: VACATION, TRAINING и т. п.
     CONSTRAINT fk_period_doctor FOREIGN KEY (doctor_id) REFERENCES doctors(doctor_id)
-        ON UPDATE CASCADE ON DELETE CASCADE
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT chk_period_dates CHECK (start_date <= end_date)
 );
 
 -- Рабочие смены врачей
@@ -55,9 +60,9 @@ CREATE TABLE appointments (
     appointment_id INTEGER PRIMARY KEY,      -- Уникальный идентификатор записи
     patient_id INTEGER NOT NULL,             -- Пациент, записавшийся на приём
     shift_id INTEGER NOT NULL,               -- Слот времени (смена), на которую назначена запись
-    created_at TIMESTAMP DEFAULT NOW(),  -- Дата и время создания записи
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),  -- Дата и время создания записи
     updated_at TIMESTAMP,                -- Дата и время последнего изменения записи
-    status VARCHAR(20) DEFAULT 'BOOKED', -- Статус записи: BOOKED, COMPLETED и т. п.
+    status VARCHAR(20) NOT NULL DEFAULT 'BOOKED', -- Статус записи: BOOKED, COMPLETED и т. п.
     CONSTRAINT fk_app_patient FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
         ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_app_shift FOREIGN KEY (shift_id) REFERENCES shifts(shift_id)
