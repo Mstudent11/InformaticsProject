@@ -3,7 +3,7 @@ CREATE TABLE users (
     user_id INTEGER PRIMARY KEY,             -- Уникальный идентификатор пользователя 
     login VARCHAR(50) NOT NULL UNIQUE,   -- Логин для входа
     password_hash VARCHAR(255) NOT NULL, -- Хеш пароля 
-    role VARCHAR(20) NOT NULL,           -- Роль: ADMIN, DOCTOR, PATIENT
+    role VARCHAR(20) NOT NULL CHECK (role IN ('ADMIN', 'DOCTOR', 'PATIENT')),           -- Роль: ADMIN, DOCTOR, PATIENT
     name VARCHAR(100) NOT NULL,     -- Полное имя пользователя
     surname VARCHAR(100) NOT NULL,
     partronymic VARCHAR(100) NOT NULL,
@@ -11,24 +11,22 @@ CREATE TABLE users (
 );
 
 -- Профиль пациента 
-CREATE TABLE patients (
-    patient_id INTEGER PRIMARY KEY, -- Ссылка на user_id
+CREATE TABLE patients (-- Ссылка на user_id
     user_id INTEGER NOT NULL UNIQUE, 
     birth_date DATE NOT NULL,   -- Дата рождения
     gender VARCHAR(10),         -- Пол
     policy_number VARCHAR(50),  -- Номер полиса
     contact_phone VARCHAR(20),  -- Контактный телефон пациента
-    CONSTRAINT fk_patient_user FOREIGN KEY (patient_id) REFERENCES users(user_id)
+    CONSTRAINT fk_patient_user FOREIGN KEY (user_id) REFERENCES users(user_id)
         ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Профиль врача 
-CREATE TABLE doctors (
-    doctor_id INTEGER PRIMARY KEY,        -- Ссылка на user_id 
+CREATE TABLE doctors (       -- Ссылка на user_id 
     user_id INTEGER NOT NULL UNIQUE, 
     specialty VARCHAR(100) NOT NULL,  -- Специальность врача (например, «терапевт», «стоматолог»)
     shift_type VARCHAR(50),           -- Тип графика/смены врача
-    CONSTRAINT fk_doctor_user FOREIGN KEY (doctor_id) REFERENCES users(user_id)
+    CONSTRAINT fk_doctor_user FOREIGN KEY (user_id) REFERENCES users(user_id)
         ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -38,7 +36,7 @@ CREATE TABLE schedule_periods (
     start_date DATE NOT NULL,  -- Дата начала периода
     end_date DATE NOT NULL,    -- Дата окончания периода
     type VARCHAR(20) NOT NULL, -- Тип периода: VACATION, TRAINING и т. п.
-    CONSTRAINT fk_period_doctor FOREIGN KEY (doctor_id) REFERENCES doctors(doctor_id)
+    CONSTRAINT fk_period_doctor FOREIGN KEY (doctor_id) REFERENCES doctors(user_id)
         ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT chk_period_dates CHECK (start_date <= end_date)
 );
@@ -50,7 +48,7 @@ CREATE TABLE shifts (
     day_date DATE NOT NULL,                  -- Дата смены
     start_time TIME NOT NULL,                -- Время начала смены
     end_time TIME NOT NULL,                  -- Время окончания смены
-    CONSTRAINT fk_shift_doctor FOREIGN KEY (doctor_id) REFERENCES doctors(doctor_id)
+    CONSTRAINT fk_shift_doctor FOREIGN KEY (doctor_id) REFERENCES doctors(user_id)
         ON UPDATE CASCADE ON DELETE CASCADE, -- Проверка: смена не может заканчиваться раньше, чем начинается
     CONSTRAINT chk_shift_time CHECK (start_time < end_time)
 );
@@ -63,8 +61,8 @@ CREATE TABLE appointments (
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),  -- Дата и время создания записи
     updated_at TIMESTAMP,                -- Дата и время последнего изменения записи
     status VARCHAR(20) NOT NULL DEFAULT 'BOOKED', -- Статус записи: BOOKED, COMPLETED и т. п.
-    CONSTRAINT fk_app_patient FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
+    CONSTRAINT fk_app_patient FOREIGN KEY (patient_id) REFERENCES patients(user_id)
         ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_app_shift FOREIGN KEY (shift_id) REFERENCES shifts(shift_id)
+    CONSTRAINT fk_app_shift FOREIGN KEY (shift_id) REFERENCES shifts(user_id)
         ON UPDATE CASCADE ON DELETE CASCADE
 );
