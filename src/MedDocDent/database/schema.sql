@@ -58,7 +58,7 @@ CREATE TABLE appointments (
     appointment_id INTEGER PRIMARY KEY,      -- Уникальный идентификатор записи
     patient_id INTEGER NOT NULL,             -- Пациент, записавшийся на приём
     shift_id INTEGER NOT NULL,               -- Слот времени (смена), на которую назначена запись
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(),  -- Дата и время создания записи
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,  -- Дата и время создания записи
     updated_at TIMESTAMP,                -- Дата и время последнего изменения записи
     status VARCHAR(20) NOT NULL DEFAULT 'BOOKED', -- Статус записи: BOOKED, COMPLETED и т. п.
     CONSTRAINT fk_app_patient FOREIGN KEY (patient_id) REFERENCES patients(user_id)

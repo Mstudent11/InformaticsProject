@@ -1,39 +1,21 @@
 import sqlite3
 from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent
+SCHEMA_PATH = BASE_DIR / "schema.sql"
+DB_PATH = BASE_DIR / "MedDocDent.db"
 
-DB_NAME = "MedDocDent.odb"
+def create_database():
+    DB_PATH.unlink(missing_ok=True)  # удаляем старую БД, если есть
 
+    with open(SCHEMA_PATH, encoding="utf-8") as f:
+        sql_script = f.read()
 
-def get_connection():
-    conn = sqlite3.connect(DB_NAME)
-    conn.execute("PRAGMA foreign_keys = ON")
-    return conn
+    with sqlite3.connect(DB_PATH) as conn:
+        conn.executescript(sql_script)
+        conn.commit()
 
+    print("База данных app.db создана заново")
 
-def init_db():
-
-    if Path(DB_NAME).exists():
-        return
-
-    conn = get_connection()
-
-    sql_path = (
-        Path(__file__).parent
-        / "schema.sql"
-    )
-
-    with open(
-        sql_path,
-        "r",
-        encoding="utf-8"
-    ) as file:
-
-        sql_script = file.read()
-
-    conn.executescript(sql_script)
-
-    conn.commit()
-    conn.close()
-
-    print("База данных создана.")
+if __name__ == "__main__":
+    create_database()
