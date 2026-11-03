@@ -6,7 +6,7 @@ CREATE TABLE users (
     role VARCHAR(20) NOT NULL CHECK (role IN ('ADMIN', 'DOCTOR', 'PATIENT')),           -- Роль: ADMIN, DOCTOR, PATIENT
     name VARCHAR(100) NOT NULL,     -- Полное имя пользователя
     surname VARCHAR(100) NOT NULL,
-    partronymic VARCHAR(100) NOT NULL,
+    patronymic VARCHAR(100) NOT NULL,
     contact_phone VARCHAR(20)            -- Контактный телефон
 );
 
@@ -22,7 +22,7 @@ CREATE TABLE patients (-- Ссылка на user_id
 );
 
 -- Профиль врача 
-CREATE TABLE doctors (       -- Ссылка на user_id 
+CREATE TABLE doctors (     -- Ссылка на user_id 
     user_id INTEGER NOT NULL UNIQUE, 
     specialty VARCHAR(100) NOT NULL,  -- Специальность врача (например, «терапевт», «стоматолог»)
     shift_type VARCHAR(50),           -- Тип графика/смены врача
