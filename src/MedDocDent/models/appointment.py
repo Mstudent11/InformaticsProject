@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from datetime import date, time, datetime
-from typing import Optional, List
+from datetime import datetime
+from typing import Optional
 
 @dataclass
 class Appointment:
@@ -8,5 +8,5 @@ class Appointment:
     patient_id: int
     shift_id: int
     created_at: datetime
-    updated_at: Optional[datetime]
-    status: str
+    updated_at: Optional[datetime] = None
+    status: str  # 'BOOKED', 'COMPLETED' и т.п.

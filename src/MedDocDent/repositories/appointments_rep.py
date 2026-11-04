@@ -1,87 +1,117 @@
-from src.MedDocDent.database import get_connection
+import sqlite3
+
+from src.MedDocDent.database.db import get_connection
 from src.MedDocDent.models.appointment import Appointment
-from datetime import datetime
-from typing import List, Optional
 
-def _map_appointment(row) -> Appointment:
-    return Appointment(*row)
 
-def create(patient_id: int, shift_id: int) -> int:
-    """
-    Создать запись на приём. Для пациента.
-    Статус по умолчанию — BOOKED.
-    Возвращает appointment_id.
-    """
+def _row_to_appointment(row) -> Appointment:
+    return Appointment(
+        appointment_id=row[0],
+        patient_id=row[1],
+        shift_id=row[2],
+        created_at=row[3],
+        updated_at=row[4],
+        status=row[5],
+    )
+
+
+def create(patient_id: int, shift_id: int, status: str = 'BOOKED') -> int:
     conn = get_connection()
     cur = conn.cursor()
-    now = datetime.now().isoformat()
-    cur.execute("""
-        INSERT INTO appointments(patient_id, shift_id, created_at, status)
-        VALUES (?, ?, ?, 'BOOKED')
-    """, (patient_id, shift_id, now))
-    conn.commit()
-    new_id = cur.lastrowid
+
+    try:
+        cur.execute("""
+            INSERT INTO appointments(patient_id, shift_id, status)
+            VALUES (?, ?, ?)
+        """, (patient_id, shift_id, status))
+
+        conn.commit()
+        appointment_id = cur.lastrowid
+    except sqlite3.IntegrityError as e:
+        conn.close()
+        raise Exception(f"Не удалось создать запись: {e}")
+
     conn.close()
-    return new_id
+    return appointment_id
 
-def cancel(appointment_id: int) -> bool:
-    """
-    Отменить запись. Для пациента (если статус BOOKED).
-    Устанавливает статус CANCELLED и обновляет updated_at.
-    Возвращает True, если отмена прошла.
-    """
+
+def get_by_id(appointment_id: int) -> Appointment | None:
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("""
-        UPDATE appointments
-        SET status = 'CANCELLED', updated_at = CURRENT_TIMESTAMP
-        WHERE appointment_id = ? AND status = 'BOOKED'
-    """, (appointment_id,))
-    conn.commit()
-    cancelled = cur.rowcount > 0
-    conn.close()
-    return cancelled
 
-def get_by_patient_id(patient_id: int) -> List[Appointment]:
-    """
-    Получить все записи пациента. Для пациента (история/отмена).
-    """
-    conn = get_connection()
-    cur = conn.cursor()
     cur.execute("""
         SELECT appointment_id, patient_id, shift_id, created_at, updated_at, status
         FROM appointments
-        WHERE patient_id = ?
-        ORDER BY created_at DESC
-    """, (patient_id,))
-    rows = cur.fetchall()
-    conn.close()
-    return [_map_appointment(r) for r in rows]
+        WHERE appointment_id = ?
+    """, (appointment_id,))
 
-def get_by_shift_id(shift_id: int) -> List[Appointment]:
-    """
-    Получить все записи на конкретную смену. Для администратора/врача (контроль загрузки).
+    row = cur.fetchone()
+    conn.close()
+    return _row_to_appointment(row) if row else None
+
+
+def get_by_patient(patient_id: int):
+    """Записи пациента с данными врача и смены — для меню бронирований.
+
+    Возвращает кортежи: (appointment_id, status, created_at,
+    doctor_name, doctor_surname, doctor_patronymic, specialty,
+    day_date, start_time, end_time)
     """
     conn = get_connection()
     cur = conn.cursor()
+
+    cur.execute("""
+        SELECT a.appointment_id, a.status, a.created_at,
+               u.name, u.surname, u.patronymic, d.specialty,
+               s.day_date, s.start_time, s.end_time
+        FROM appointments a
+        JOIN shifts s ON a.shift_id = s.shift_id
+        JOIN doctors d ON s.doctor_id = d.user_id
+        JOIN users u ON d.user_id = u.user_id
+        WHERE a.patient_id = ?
+        ORDER BY s.day_date, s.start_time
+    """, (patient_id,))
+
+    rows = cur.fetchall()
+    conn.close()
+    return rows
+
+
+def get_by_shift(shift_id: int) -> list[Appointment]:
+    """Записи по смене — используется админом при редактировании расписания."""
+    conn = get_connection()
+    cur = conn.cursor()
+
     cur.execute("""
         SELECT appointment_id, patient_id, shift_id, created_at, updated_at, status
         FROM appointments
         WHERE shift_id = ?
-        ORDER BY created_at
     """, (shift_id,))
+
     rows = cur.fetchall()
     conn.close()
-    return [_map_appointment(r) for r in rows]
+    return [_row_to_appointment(row) for row in rows]
 
-def mark_completed(appointment_id: int) -> bool:
-    """
-    Пометить запись как завершённую. Только для администратора/врача.
-    Возвращает True, если статус изменён.
-    """
+
+def update_status(appointment_id: int, status: str):
     conn = get_connection()
     cur = conn.cursor()
+
     cur.execute("""
         UPDATE appointments
-        SET status = 'COMPLETED', updated_at = CURRENT_TIMESTAMP
-        WHERE appointment_id = ?""")
+        SET status = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE appointment_id = ?
+    """, (status, appointment_id))
+
+    conn.commit()
+    conn.close()
+
+
+def delete(appointment_id: int):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("DELETE FROM appointments WHERE appointment_id = ?", (appointment_id,))
+
+    conn.commit()
+    conn.close()

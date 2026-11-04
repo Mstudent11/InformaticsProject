@@ -1,6 +1,5 @@
-from dataclasses import dataclass, field
-from datetime import date, time
-from typing import Optional
+from dataclasses import dataclass
+from datetime import date
 
 @dataclass
 class SchedulePeriod:
@@ -8,4 +7,4 @@ class SchedulePeriod:
     doctor_id: int
     start_date: date
     end_date: date
-    type: str  # VACATION, TRAINING, etc.
+    type: str  # например: 'VACATION', 'TRAINING', 'WORK'

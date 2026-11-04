@@ -1,10 +1,9 @@
-from dataclasses import dataclass, field
-from datetime import date, time
+from dataclasses import dataclass
+from datetime import date
 from typing import Optional
 
 @dataclass
 class Patient:
-    patient_id: int
     user_id: int
     birth_date: date
     gender: Optional[str] = None

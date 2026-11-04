@@ -63,6 +63,6 @@ CREATE TABLE appointments (
     status VARCHAR(20) NOT NULL DEFAULT 'BOOKED', -- Статус записи: BOOKED, COMPLETED и т. п.
     CONSTRAINT fk_app_patient FOREIGN KEY (patient_id) REFERENCES patients(user_id)
         ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_app_shift FOREIGN KEY (shift_id) REFERENCES shifts(user_id)
+    CONSTRAINT fk_app_shift FOREIGN KEY (shift_id) REFERENCES shifts(shift_id)
         ON UPDATE CASCADE ON DELETE CASCADE
 );

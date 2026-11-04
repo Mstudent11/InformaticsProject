@@ -1,101 +1,151 @@
-from src.MedDocDent.database import get_connection
+from src.MedDocDent.database.db import get_connection
 from src.MedDocDent.models.shifts import Shift
-from typing import List, Optional
-from datetime import datetime
 
-def _map_shift(row) -> Shift:
-    return Shift(*row)
 
-def get_all() -> List[Shift]:
-    """
-    Получить все смены (всё расписание). Доступно всем пользователям.
-    """
+def _row_to_shift(row) -> Shift:
+    return Shift(
+        shift_id=row[0],
+        doctor_id=row[1],
+        day_date=row[2],
+        start_time=row[3],
+        end_time=row[4],
+    )
+
+
+def create(doctor_id: int, day_date: str, start_time: str, end_time: str) -> int:
+    if start_time >= end_time:
+        raise ValueError("Смена не может заканчиваться раньше, чем начинается")
+
     conn = get_connection()
     cur = conn.cursor()
+
+    cur.execute("""
+        INSERT INTO shifts(doctor_id, day_date, start_time, end_time)
+        VALUES (?, ?, ?, ?)
+    """, (doctor_id, day_date, start_time, end_time))
+
+    conn.commit()
+    shift_id = cur.lastrowid
+    conn.close()
+    return shift_id
+
+
+def get_by_id(shift_id: int) -> Shift | None:
+    conn = get_connection()
+    cur = conn.cursor()
+
     cur.execute("""
         SELECT shift_id, doctor_id, day_date, start_time, end_time
         FROM shifts
-        ORDER BY day_date, start_time
-    """)
-    rows = cur.fetchall()
-    conn.close()
-    return [_map_shift(r) for r in rows]
+        WHERE shift_id = ?
+    """, (shift_id,))
 
-def get_by_doctor_id(doctor_id: int) -> List[Shift]:
-    """
-    Получить смены конкретного врача. Для врача (своё расписание) и админа.
-    """
+    row = cur.fetchone()
+    conn.close()
+    return _row_to_shift(row) if row else None
+
+
+def get_doctor_schedule(doctor_id: int) -> list[Shift]:
+    """Расписание конкретного врача."""
     conn = get_connection()
     cur = conn.cursor()
+
     cur.execute("""
         SELECT shift_id, doctor_id, day_date, start_time, end_time
         FROM shifts
         WHERE doctor_id = ?
         ORDER BY day_date, start_time
     """, (doctor_id,))
+
     rows = cur.fetchall()
     conn.close()
-    return [_map_shift(r) for r in rows]
+    return [_row_to_shift(row) for row in rows]
 
-def create(doctor_id: int, day_date: str, start_time: str, end_time: str) -> int:
-    """
-    Добавить новую смену. Только для администратора.
-    day_date и время передаются как строки в формате YYYY-MM-DD и HH:MM:SS.
-    Возвращает shift_id новой смены.
+
+def get_full_schedule():
+    """Расписание всех врачей с ФИО и специальностью.
+
+    Возвращает кортежи: (shift_id, doctor_id, name, surname, patronymic,
+    specialty, day_date, start_time, end_time)
     """
     conn = get_connection()
     cur = conn.cursor()
+
     cur.execute("""
-        INSERT INTO shifts(doctor_id, day_date, start_time, end_time)
-        VALUES (?, ?, ?, ?)
-    """, (doctor_id, day_date, start_time, end_time))
-    conn.commit()
-    new_id = cur.lastrowid
+        SELECT s.shift_id, s.doctor_id, u.name, u.surname, u.patronymic,
+               d.specialty, s.day_date, s.start_time, s.end_time
+        FROM shifts s
+        JOIN doctors d ON s.doctor_id = d.user_id
+        JOIN users u ON d.user_id = u.user_id
+        ORDER BY s.day_date, s.start_time
+    """)
+
+    rows = cur.fetchall()
     conn.close()
-    return new_id
+    return rows
 
-def update(shift_id: int, day_date: Optional[str], start_time: Optional[str], end_time: Optional[str]) -> bool:
-    """
-    Частично обновить смену (любое подмножество полей). Только для администратора.
-    Возвращает True, если обновление произошло.
-    """
-    parts = []
-    values = []
 
+def get_free_shifts():
+    """Свободные смены без записей — для меню бронирований.
+
+    Возвращает кортежи: (shift_id, doctor_id, name, surname, patronymic,
+    specialty, day_date, start_time, end_time)
+    """
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT s.shift_id, s.doctor_id, u.name, u.surname, u.patronymic,
+               d.specialty, s.day_date, s.start_time, s.end_time
+        FROM shifts s
+        JOIN doctors d ON s.doctor_id = d.user_id
+        JOIN users u ON d.user_id = u.user_id
+        WHERE s.shift_id NOT IN (SELECT shift_id FROM appointments)
+        ORDER BY s.day_date, s.start_time
+    """)
+
+    rows = cur.fetchall()
+    conn.close()
+    return rows
+
+
+def update(shift_id: int, doctor_id: int = None, day_date: str = None,
+           start_time: str = None, end_time: str = None):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    fields = []
+    params = []
+
+    if doctor_id is not None:
+        fields.append("doctor_id = ?")
+        params.append(doctor_id)
     if day_date is not None:
-        parts.append("day_date = ?")
-        values.append(day_date)
+        fields.append("day_date = ?")
+        params.append(day_date)
     if start_time is not None:
-        parts.append("start_time = ?")
-        values.append(start_time)
+        fields.append("start_time = ?")
+        params.append(start_time)
     if end_time is not None:
-        parts.append("end_time = ?")
-        values.append(end_time)
+        fields.append("end_time = ?")
+        params.append(end_time)
 
-    if not parts:
-        return False
+    if not fields:
+        conn.close()
+        return
 
-    values.append(shift_id)
-    query = f"UPDATE shifts SET {', '.join(parts)} WHERE shift_id = ?"
+    params.append(shift_id)
+    cur.execute(f"UPDATE shifts SET {', '.join(fields)} WHERE shift_id = ?", params)
 
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute(query, values)
     conn.commit()
-    updated = cur.rowcount > 0
     conn.close()
-    return updated
 
-def delete(shift_id: int) -> bool:
-    """
-    Удалить смену. Только для администратора.
-    Перед удалением желательно проверить, нет ли активных записей на этот слот.
-    Возвращает True, если удаление произошло.
-    """
+
+def delete(shift_id: int):
     conn = get_connection()
     cur = conn.cursor()
+
     cur.execute("DELETE FROM shifts WHERE shift_id = ?", (shift_id,))
+
     conn.commit()
-    deleted = cur.rowcount > 0
     conn.close()
-    return deleted
