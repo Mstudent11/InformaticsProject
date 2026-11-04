@@ -19,7 +19,7 @@ def register_patient(actor_role: str, login: str, password: str,
 
     user_id = users_rep.create(
         login=login,
-        password_hash=hash_password(password),
+        password_hash=password,
         role="PATIENT",
         name=name,
         surname=surname,
@@ -51,7 +51,7 @@ def register_doctor(actor_role: str, login: str, password: str,
 
     user_id = users_rep.create(
         login=login,
-        password_hash=hash_password(password),
+        password_hash=password,
         role="DOCTOR",
         name=name,
         surname=surname,

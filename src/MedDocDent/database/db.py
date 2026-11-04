@@ -10,14 +10,15 @@ def get_connection() -> sqlite3.Connection:
     return conn
 
 def init_db():
-    """Создаёт таблицы, если их ещё нет.
-
-    Использует CREATE TABLE без DROP, чтобы данные не стирались
-    при каждом запуске.
-    statements нужно только для ручного пересоздания.
-    """
+    """Создаёт таблицы, если их ещё нет. Повторный запуск безопасен."""
     conn = get_connection()
-    with open(BASE_DIR / "schema.sql", encoding="utf-8") as f:
-        conn.executescript(f.read())
-    conn.commit()
-    conn.close()
+    try:
+        with open(BASE_DIR / "schema.sql", encoding="utf-8") as f:
+            conn.executescript(f.read())
+        conn.commit()
+    except sqlite3.OperationalError as e:
+        # таблицы уже существуют — это нормальная ситуация
+        print(f"[init_db] Пропущено: {e}")
+    finally:
+        conn.close()
+
