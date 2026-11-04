@@ -1,7 +1,7 @@
-from src.MedDocDent.database.db import get_connection
-from src.MedDocDent.auth import login, show_default_admin_hint
-from src.MedDocDent.menu import admin_menu, doctor_menu, patient_menu
-from src.MedDocDent.services.auth_serv import create_default_admin
+from database.db import get_connection
+from auth import login, show_default_admin_hint
+from menu import admin_menu, doctor_menu, patient_menu
+from services.auth_serv import create_default_admin
 
 
 def main():

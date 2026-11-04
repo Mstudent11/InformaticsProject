@@ -1,5 +1,5 @@
-from src.MedDocDent.database.db import get_connection
-from src.MedDocDent.models.shifts import Shift
+from database.db import get_connection
+from models.shifts import Shift
 
 
 def _row_to_shift(row) -> Shift:

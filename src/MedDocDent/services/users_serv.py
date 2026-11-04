@@ -1,8 +1,8 @@
-from src.MedDocDent.repositories import users_rep
-from src.MedDocDent.repositories import patients_rep
-from src.MedDocDent.repositories import doctors_rep
-from src.MedDocDent.services.access_control import AccessControl
-from src.MedDocDent.services.auth_serv import hash_password
+from repositories import users_rep
+from repositories import patients_rep
+from repositories import doctors_rep
+from services.access_control import AccessControl
+from services.auth_serv import hash_password
 
 
 def register_patient(actor_role: str, login: str, password: str,

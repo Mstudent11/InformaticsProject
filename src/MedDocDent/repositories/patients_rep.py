@@ -1,5 +1,5 @@
-from src.MedDocDent.database.db import get_connection
-from src.MedDocDent.models.patients import Patient
+from database.db import get_connection
+from models.patients import Patient
 
 
 def _row_to_patient(row) -> Patient:

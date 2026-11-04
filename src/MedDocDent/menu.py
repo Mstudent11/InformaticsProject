@@ -1,11 +1,11 @@
-from src.MedDocDent.services.users_serv import (
+from services.users_serv import (
     register_patient,
     register_doctor,
     delete_user,
     get_doctors_list
 )
 
-from src.MedDocDent.services.schedule_serv import (
+from services.schedule_serv import (
     get_full_schedule,
     get_doctor_schedule,
     add_shift,
@@ -16,7 +16,7 @@ from src.MedDocDent.services.schedule_serv import (
     delete_period
 )
 
-from src.MedDocDent.services.appointments_serv import (
+from services.appointments_serv import (
     get_free_shifts,
     create_appointment,
     get_my_appointments,

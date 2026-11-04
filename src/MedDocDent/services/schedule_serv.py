@@ -1,8 +1,8 @@
-from src.MedDocDent.repositories import shifts_rep
-from src.MedDocDent.repositories import schedule_periods_rep
-from src.MedDocDent.models.shifts import Shift
-from src.MedDocDent.models.schedule_periods import SchedulePeriod
-from src.MedDocDent.services.access_control import AccessControl
+from repositories import shifts_rep
+from repositories import schedule_periods_rep
+from models.shifts import Shift
+from models.schedule_periods import SchedulePeriod
+from services.access_control import AccessControl
 
 
 # ---------- Просмотр (все роли) ----------

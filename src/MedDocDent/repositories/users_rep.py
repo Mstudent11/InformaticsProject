@@ -1,5 +1,5 @@
-from src.MedDocDent.database.db import get_connection
-from src.MedDocDent.models.users import User
+from database.db import get_connection
+from models.users import User
 
 VALID_ROLES = ('ADMIN', 'DOCTOR', 'PATIENT')
 

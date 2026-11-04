@@ -1,7 +1,7 @@
-from src.MedDocDent.repositories import appointments_rep
-from src.MedDocDent.repositories import shifts_rep
-from src.MedDocDent.models.appointment import Appointment
-from src.MedDocDent.services.access_control import AccessControl
+from repositories import appointments_rep
+from repositories import shifts_rep
+from models.appointment import Appointment
+from services.access_control import AccessControl
 
 
 def get_free_shifts(actor_role: str):

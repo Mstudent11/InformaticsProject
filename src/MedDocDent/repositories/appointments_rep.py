@@ -1,7 +1,7 @@
 import sqlite3
 
-from src.MedDocDent.database.db import get_connection
-from src.MedDocDent.models.appointment import Appointment
+from database.db import get_connection
+from models.appointment import Appointment
 
 
 def _row_to_appointment(row) -> Appointment:

@@ -1,7 +1,7 @@
 import hashlib
 
-from src.MedDocDent.repositories import users_repository
-from src.MedDocDent.models.users import User
+from repositories import users_rep
+from models.users import User
 
 
 def hash_password(password: str) -> str:
@@ -10,7 +10,7 @@ def hash_password(password: str) -> str:
 
 def authenticate(login: str, password: str) -> User | None:
     """Вход в систему для любого пользователя. Возвращает объект User или None."""
-    user = users_repository.get_by_login(login)
+    user = users_rep.get_by_login(login)
 
     if not user:
         return None
@@ -23,10 +23,10 @@ def authenticate(login: str, password: str) -> User | None:
 
 def create_default_admin():
     """Создаёт администратора по умолчанию (admin / admin), если его ещё нет."""
-    if users_repository.get_by_login("admin"):
+    if users_rep.get_by_login("admin"):
         return
 
-    users_repository.create(
+    users_rep.create(
         login="admin",
         password_hash=hash_password("admin"),
         role="ADMIN",

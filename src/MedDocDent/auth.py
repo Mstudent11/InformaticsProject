@@ -1,4 +1,4 @@
-from src.MedDocDent.services.auth_serv import authenticate, create_default_admin
+from services.auth_serv import authenticate, create_default_admin
 
 
 def login():

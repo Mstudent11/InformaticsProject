@@ -1,5 +1,5 @@
-from src.MedDocDent.database.db import get_connection
-from src.MedDocDent.models.schedule_periods import SchedulePeriod
+from database.db import get_connection
+from models.schedule_periods import SchedulePeriod
 
 VALID_TYPES = ('VACATION', 'TRAINING', 'SICK_LEAVE', 'DAY_OFF')
 
