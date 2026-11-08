@@ -4,6 +4,7 @@ from repositories import doctors_rep
 from services.access_control import AccessControl
 from services.auth_serv import hash_password
 from typing import List, Dict, Any
+from database.db import get_connection
 
 
 def register_patient(actor_role: str, login: str, password: str,
@@ -131,3 +132,42 @@ def list_available_for_role(self, role: str) -> List[Dict[str, Any]]:
             continue
 
     return result
+
+
+def get_all_users():
+    conn = get_connection()
+    cursor = conn.cursor()
+    # Не выводим password_hash
+    cursor.execute("""
+        SELECT user_id, login, role, name, surname, patronymic, contact_phone
+        FROM users
+    """)
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
+
+def get_all_patients():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT u.user_id, u.name, u.surname, u.patronymic,
+               p.birth_date, p.gender, p.policy_number, p.contact_phone
+        FROM users u
+        JOIN patients p ON u.user_id = p.user_id
+    """)
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
+
+def get_all_doctors():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT u.user_id, u.name, u.surname, u.patronymic,
+               d.specialty, d.shift_type
+        FROM users u
+        JOIN doctors d ON u.user_id = d.user_id
+    """)
+    rows = cursor.fetchall()
+    conn.close()
+    return rows

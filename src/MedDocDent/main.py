@@ -2,6 +2,7 @@ from database.db import get_connection, init_db
 from auth import login, show_default_admin_hint
 from menu import admin_menu, doctor_menu, patient_menu
 from services.auth_serv import create_default_admin
+from utils import print_table
 
 
 def main():

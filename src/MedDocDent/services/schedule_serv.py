@@ -4,6 +4,7 @@ from models.shifts import Shift
 from models.schedule_periods import SchedulePeriod
 from services.access_control import AccessControl
 from typing import List, Dict, Any
+from database.db import get_connection
 
 
 # ---------- Просмотр (все роли) ----------
@@ -119,3 +120,18 @@ def list_available_for_role(self, role: str) -> List[Dict[str, Any]]:
             continue
 
     return result
+
+
+def get_all_shifts():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT s.shift_id, s.day_date, s.start_time, s.end_time,
+               u.surname, u.name, d.specialty
+        FROM shifts s
+        JOIN doctors d ON s.doctor_id = d.user_id
+        JOIN users u ON d.user_id = u.user_id
+    """)
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
