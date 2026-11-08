@@ -2,6 +2,18 @@ from database.db import get_connection
 from models.patients import Patient
 
 
+
+def get_all_rows(self):
+    """Возвращает все строки таблицы patients (для отображения списка)."""
+    conn = self.get_connection()
+    cur = conn.cursor()
+    query = "SELECT * FROM patients"
+    cur.execute(query)
+    rows = cur.fetchall()
+    conn.close()
+    return rows
+
+
 def _row_to_patient(row) -> Patient:
     return Patient(
         user_id=row[0],

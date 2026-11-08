@@ -129,3 +129,13 @@ def delete(user_id: int):
 
     conn.commit()
     conn.close()
+
+
+def get_all_rows(self):
+    conn = self.get_connection()
+    cur = conn.cursor()
+    query = "SELECT * FROM users"
+    cur.execute(query)
+    rows = cur.fetchall()
+    conn.close()
+    return rows
