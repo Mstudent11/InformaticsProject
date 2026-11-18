@@ -50,7 +50,7 @@ def delete_appointment(actor_role: str, user_id: int, appointment_id: int):
     appointments_rep.delete(appointment_id)
 
 
-def list_available_for_role(self, role: str) -> List[Dict[str, Any]]:
+'''def list_available_for_role(self, role: str) -> List[Dict[str, Any]]:
     """
     Возвращает список записей, доступных для данной роли.
     ADMIN: видит всё.
@@ -91,4 +91,4 @@ def list_available_for_role(self, role: str) -> List[Dict[str, Any]]:
                     result.append(row_dict)
             continue
 
-    return result
+    return result'''

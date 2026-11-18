@@ -89,11 +89,19 @@ def delete(user_id: int):
 
 
 
-def get_all_rows(self):
+'''def get_all_rows(self):
     conn = self.get_connection()
     cur = conn.cursor()
     query = "SELECT * FROM doctors"
     cur.execute(query)
+    rows = cur.fetchall()
+    conn.close()
+    return rows'''
+
+def get_all_rows() -> list[tuple]:
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM doctors")
     rows = cur.fetchall()
     conn.close()
     return rows

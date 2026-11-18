@@ -75,11 +75,19 @@ def delete(period_id: int):
     conn.close()
 
 
-def get_all_rows(self):
+'''def get_all_rows(self):
     conn = self.get_connection()
     cur = conn.cursor()
     query = "SELECT * FROM schedule_periods"
     cur.execute(query)
+    rows = cur.fetchall()
+    conn.close()
+    return rows'''
+
+def get_all_rows() -> list[tuple]:
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM schedule_periods")
     rows = cur.fetchall()
     conn.close()
     return rows

@@ -62,3 +62,10 @@ class AccessControl:
         :param user_id: user_id текущего пользователя
         """
         return role == 'PATIENT' and appointment_patient_id == user_id
+
+    # ---------- Экспорт данных ----------
+
+    @staticmethod
+    def can_export(role: str) -> bool:
+        """Выгрузка таблиц в JSON/CSV/XML/YAML — только админ."""
+        return role == 'ADMIN'

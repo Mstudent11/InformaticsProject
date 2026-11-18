@@ -1,4 +1,4 @@
-
+'''
 import os
 import json
 import csv
@@ -148,4 +148,4 @@ def main():
     print(f"Всего записей: {len(records)}")
 
 if __name__ == "__main__":
-    main()
+    main()'''

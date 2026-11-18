@@ -85,11 +85,19 @@ def update(user_id: int, birth_date: str = None, gender: str = None,
     conn.close()
 
 
-def delete(user_id: int):
+'''def delete(user_id: int):
     conn = get_connection()
     cur = conn.cursor()
 
     cur.execute("DELETE FROM patients WHERE user_id = ?", (user_id,))
 
     conn.commit()
+    conn.close()'''
+
+def get_all_rows() -> list[tuple]:
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM patients")
+    rows = cur.fetchall()
     conn.close()
+    return rows
