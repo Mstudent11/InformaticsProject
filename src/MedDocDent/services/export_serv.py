@@ -88,10 +88,11 @@ def _flatten(record: dict, prefix: str = "") -> dict:
 
 def _add_xml(parent, data: dict):
     for key, value in data.items():
-        child = ET.SubElement(parent, key)
         if isinstance(value, dict):
+            child = ET.SubElement(parent, key)
             _add_xml(child, value)
         else:
+            child = ET.SubElement(parent, key)
             child.text = "" if value is None else str(value)
 
 
