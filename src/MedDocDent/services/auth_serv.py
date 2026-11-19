@@ -1,3 +1,38 @@
+import hashlib
+
+from repositories import users_rep
+
+
+def hash_password(password: str) -> str:
+    return hashlib.sha256(password.encode()).hexdigest()
+
+
+def authenticate(login: str, password: str) -> "User | None":
+    user = users_rep.get_by_login(login)
+    if not user:
+        return None
+
+    if user.password_hash != hash_password(password):
+        return None
+
+    return user
+
+
+def create_default_admin():
+    """Создаёт администратора по умолчанию (admin / admin), если его ещё нет."""
+    if users_rep.get_by_login("admin"):
+        return
+
+    users_rep.create(
+        login="admin",
+        password_hash=hash_password("admin"),
+        role="ADMIN",
+        name="System",
+        surname="Admin",
+        patronymic="Admin",
+    )
+
+
 '''import hashlib
 
 from repositories import users_rep
@@ -85,37 +120,3 @@ def list_available_for_role(self, role: str) -> List[Dict[str, Any]]:
             continue
 
     return result'''
-
-import hashlib
-
-from repositories import users_rep
-
-
-def hash_password(password: str) -> str:
-    return hashlib.sha256(password.encode()).hexdigest()
-
-
-def authenticate(login: str, password: str) -> "User | None":
-    user = users_rep.get_by_login(login)
-    if not user:
-        return None
-
-    if user.password_hash != hash_password(password):
-        return None
-
-    return user
-
-
-def create_default_admin():
-    """Создаёт администратора по умолчанию (admin / admin), если его ещё нет."""
-    if users_rep.get_by_login("admin"):
-        return
-
-    users_rep.create(
-        login="admin",
-        password_hash=hash_password("admin"),
-        role="ADMIN",
-        name="System",
-        surname="Admin",
-        patronymic="Admin",
-    )
