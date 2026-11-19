@@ -129,14 +129,15 @@ def export_table(table_name: str) -> Path:
         writer.writeheader()
         writer.writerows(flat_rows)
 
-    # ---- XML ----
+ # ---- XML ----
     root = ET.Element(table_name)
     for rec in records:
         row_el = ET.SubElement(root, "row")
         _add_xml(row_el, rec)
-    ET.ElementTree(root).write(
-        OUT_DIR / "data.xml", encoding="utf-8", xml_declaration=True
-    )
+
+    tree = ET.ElementTree(root)
+    ET.indent(tree, space="  ")  # добавляем переносы и отступы
+    tree.write(OUT_DIR / "data.xml", encoding="utf-8", xml_declaration=True)
 
     # ---- YAML ----
     with open(OUT_DIR / "data.yaml", "w", encoding="utf-8") as f:

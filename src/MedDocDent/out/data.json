@@ -1,0 +1,92 @@
+[
+  {
+    "appointment_id": 2,
+    "patient_id": 3,
+    "shift_id": 2,
+    "created_at": "2026-10-29 90:00:00",
+    "updated_at": null,
+    "status": "BOOKED",
+    "patients": {
+      "user_id": 3,
+      "birth_date": "02.01.00",
+      "gender": "Мужской",
+      "policy_number": "2xxxxxxxxx",
+      "contact_phone": "8zxxxxxxxxx",
+      "users": {
+        "user_id": 3,
+        "login": "abcd",
+        "role": "PATIENT",
+        "name": "Boris",
+        "surname": "Petrov",
+        "patronymic": "Ivanovich",
+        "contact_phone": "8zxxxxxxxxx"
+      }
+    },
+    "shifts": {
+      "shift_id": 2,
+      "doctor_id": 6,
+      "day_date": "19.11.2026",
+      "start_time": "10:00:00",
+      "end_time": "18:00:00",
+      "doctors": {
+        "user_id": 6,
+        "specialty": "Стоматолог-хирург",
+        "shift_type": "2",
+        "users": {
+          "user_id": 6,
+          "login": "ABCD",
+          "role": "DOCTOR",
+          "name": "Boris",
+          "surname": "Levin",
+          "patronymic": "Semenovich",
+          "contact_phone": "8xxyxxxxxxx"
+        }
+      }
+    }
+  },
+  {
+    "appointment_id": 3,
+    "patient_id": 4,
+    "shift_id": 3,
+    "created_at": "2026-10-29 08:00:00",
+    "updated_at": null,
+    "status": "BOOKED",
+    "patients": {
+      "user_id": 4,
+      "birth_date": "03.01.00",
+      "gender": "Мужской",
+      "policy_number": "3xxxxxxxxx",
+      "contact_phone": "8xyxxxxxxxx",
+      "users": {
+        "user_id": 4,
+        "login": "abcde",
+        "role": "PATIENT",
+        "name": "Andrew",
+        "surname": "Sidorov",
+        "patronymic": "Antonovich",
+        "contact_phone": "8xyxxxxxxxx"
+      }
+    },
+    "shifts": {
+      "shift_id": 3,
+      "doctor_id": 7,
+      "day_date": "21.11.2026",
+      "start_time": "10:00:00",
+      "end_time": "18:00:00",
+      "doctors": {
+        "user_id": 7,
+        "specialty": "Стоматолог-ортопед",
+        "shift_type": "3",
+        "users": {
+          "user_id": 7,
+          "login": "ABCDE",
+          "role": "DOCTOR",
+          "name": "Gleb",
+          "surname": "Romanenko",
+          "patronymic": "Romanovich",
+          "contact_phone": "8xxzxxxxxxx"
+        }
+      }
+    }
+  }
+]
